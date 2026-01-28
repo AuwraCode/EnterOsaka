@@ -14,26 +14,45 @@ Projekt jest już gotowy do deploymentu na Vercel. Wszystkie pliki konfiguracyjn
 
 ## Krok 3: Konfiguracja zmiennych środowiskowych
 
-W sekcji "Environment Variables" dodaj następujące zmienne:
+**⚠️ TO JEST NAJWAŻNIEJSZY KROK!** Bez tych zmiennych aplikacja nie będzie działać.
+
+### Jak dodać zmienne:
+
+1. W Vercel Dashboard przejdź do: **Settings** → **Environment Variables**
+2. Kliknij **Add New**
+3. Dodaj każdą zmienną osobno
 
 ### Wymagane zmienne:
 
-```
-NEXT_PUBLIC_SUPABASE_URL=https://twoj-projekt.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=twoj_anon_key_tutaj
-```
+**NEXT_PUBLIC_SUPABASE_URL**
+- **Key**: `NEXT_PUBLIC_SUPABASE_URL`
+- **Value**: Twój Supabase Project URL (np. `https://xxxxx.supabase.co`)
+- **Environment**: ✅ Production, ✅ Preview, ✅ Development (zaznacz wszystkie!)
+
+**NEXT_PUBLIC_SUPABASE_ANON_KEY**
+- **Key**: `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- **Value**: Twój Supabase anon key (długi klucz zaczynający się od `eyJ...`)
+- **Environment**: ✅ Production, ✅ Preview, ✅ Development (zaznacz wszystkie!)
 
 ### Opcjonalne zmienne (dla customizacji):
 
-```
-NEXT_PUBLIC_ACCESS_CODE=bet5000
-NEXT_PUBLIC_ADMIN_CODE=admin123
-```
+**NEXT_PUBLIC_ACCESS_CODE**
+- **Key**: `NEXT_PUBLIC_ACCESS_CODE`
+- **Value**: `bet5000` (lub własny kod)
+- **Environment**: ✅ Production, ✅ Preview, ✅ Development
 
-**Gdzie znaleźć wartości:**
-- `NEXT_PUBLIC_SUPABASE_URL` i `NEXT_PUBLIC_SUPABASE_ANON_KEY`: W panelu Supabase → Settings → API
-- `NEXT_PUBLIC_ACCESS_CODE`: Kod dostępu do aplikacji (domyślnie: bet5000)
-- `NEXT_PUBLIC_ADMIN_CODE`: Kod dostępu do panelu admina (domyślnie: admin123)
+**NEXT_PUBLIC_ADMIN_CODE**
+- **Key**: `NEXT_PUBLIC_ADMIN_CODE`
+- **Value**: `admin123` (lub własny kod)
+- **Environment**: ✅ Production, ✅ Preview, ✅ Development
+
+**Gdzie znaleźć wartości Supabase:**
+1. Przejdź do [supabase.com](https://supabase.com)
+2. Wybierz swój projekt
+3. Przejdź do **Settings** → **API**
+4. Skopiuj **Project URL** i **anon public** key
+
+**📖 Szczegółowa instrukcja:** Zobacz [VERCEL_ENV_SETUP.md](./VERCEL_ENV_SETUP.md) dla pełnego przewodnika krok po kroku z obrazkami.
 
 ## Krok 4: Deployment
 

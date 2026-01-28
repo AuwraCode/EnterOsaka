@@ -23,12 +23,20 @@ export default function TransactionForm({
   const [date, setDate] = useState(new Date().toISOString().split('T')[0])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const supabase = createClient()
+  
+  // Only create client in browser and if env vars are available
+  const supabase = typeof window !== 'undefined' ? createClient() : null
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
+
+    if (!supabase) {
+      setError('Database connection not available. Please check environment variables.')
+      setLoading(false)
+      return
+    }
 
     try {
       const amountNum = parseFloat(amount)

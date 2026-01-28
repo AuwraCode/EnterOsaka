@@ -55,9 +55,11 @@ export default function DashboardContent() {
   const [goalAmount, setGoalAmount] = useState(5000)
 
   useEffect(() => {
-    const savedGoal = localStorage.getItem('goal_amount')
-    if (savedGoal) {
-      setGoalAmount(parseInt(savedGoal))
+    if (typeof window !== 'undefined') {
+      const savedGoal = localStorage.getItem('goal_amount')
+      if (savedGoal) {
+        setGoalAmount(parseInt(savedGoal))
+      }
     }
   }, [])
 

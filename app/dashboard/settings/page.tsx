@@ -18,6 +18,9 @@ export default function SettingsPage() {
   const supabase = createClient()
 
   useEffect(() => {
+    // Check if we're in the browser
+    if (typeof window === 'undefined') return
+
     // Check if already admin
     const adminStatus = localStorage.getItem('betscale_admin') === 'true'
     setIsAdmin(adminStatus)
@@ -336,7 +339,9 @@ export default function SettingsPage() {
                   Current Goal Amount
                 </label>
                 <div className="px-4 py-3 bg-medium-gray border border-light-gray rounded-lg text-foreground">
-                  {parseInt(localStorage.getItem('goal_amount') || '5000').toLocaleString()} PLN
+                  {typeof window !== 'undefined' 
+                    ? parseInt(localStorage.getItem('goal_amount') || '5000').toLocaleString() 
+                    : '5000'} PLN
                 </div>
                 <p className="text-xs text-gray-400 mt-1">
                   Use admin panel to change this value

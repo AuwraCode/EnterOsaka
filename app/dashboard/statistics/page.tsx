@@ -3,6 +3,9 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Navigation from '@/components/Navigation'
+
+// Force dynamic rendering to avoid build-time issues with Supabase
+export const dynamic = 'force-dynamic'
 import {
   LineChart,
   Line,
@@ -29,7 +32,9 @@ export default function StatisticsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [loading, setLoading] = useState(true)
   const [goalAmount, setGoalAmount] = useState(5000)
-  const supabase = createClient()
+  
+  // Only create client in browser
+  const supabase = typeof window !== 'undefined' ? createClient() : null
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -45,6 +50,11 @@ export default function StatisticsPage() {
   }, [])
 
   const fetchTransactions = async () => {
+    if (!supabase) {
+      setLoading(false)
+      return
+    }
+
     try {
       const { data, error } = await supabase
         .from('transactions')

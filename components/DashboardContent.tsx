@@ -28,13 +28,20 @@ export default function DashboardContent() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [loading, setLoading] = useState(true)
   const [player, setPlayer] = useState<'A' | 'B'>('A')
-  const supabase = createClient()
+  
+  // Only create client in browser
+  const supabase = typeof window !== 'undefined' ? createClient() : null
 
   useEffect(() => {
     fetchTransactions()
   }, [])
 
   const fetchTransactions = async () => {
+    if (!supabase) {
+      setLoading(false)
+      return
+    }
+
     try {
       const { data, error } = await supabase
         .from('transactions')

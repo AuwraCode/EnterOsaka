@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react'
 import Navigation from '@/components/Navigation'
 import { createClient } from '@/lib/supabase/client'
 
+// Force dynamic rendering to avoid build-time issues
+export const dynamic = 'force-dynamic'
+
 const ADMIN_CODE = process.env.NEXT_PUBLIC_ADMIN_CODE || 'admin123'
 
 export default function SettingsPage() {
@@ -15,7 +18,9 @@ export default function SettingsPage() {
   const [playerCodeError, setPlayerCodeError] = useState<string | null>(null)
   const [currentPlayer, setCurrentPlayer] = useState<'A' | 'B' | null>(null)
   const [savedPlayerCode, setSavedPlayerCode] = useState('')
-  const supabase = createClient()
+  
+  // Only create client in browser
+  const supabase = typeof window !== 'undefined' ? createClient() : null
 
   useEffect(() => {
     // Check if we're in the browser
@@ -50,6 +55,11 @@ export default function SettingsPage() {
   }
 
   const handleResetProgress = async () => {
+    if (!supabase) {
+      alert('Database connection not available')
+      return
+    }
+
     if (!confirm('Are you sure you want to delete ALL transactions? This cannot be undone!')) {
       return
     }

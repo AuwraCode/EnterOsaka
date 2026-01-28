@@ -37,19 +37,34 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=twoj_anon_key_tutaj
 
 **⚠️ WAŻNE**: Nie commituj pliku `.env.local` do repozytorium!
 
-## Krok 3: Utwórz tabelę w bazie danych
+## Krok 3: Utwórz tabele w bazie danych
 
 1. W panelu Supabase przejdź do **SQL Editor**
 2. Kliknij "New query"
-3. Skopiuj i wklej całą zawartość pliku `supabase/migrations/001_initial_schema.sql`
-4. Kliknij "Run" (lub naciśnij Ctrl+Enter)
-5. Powinieneś zobaczyć komunikat o sukcesie
+3. Wykonaj migracje w kolejności:
 
-### Weryfikacja tabeli
+### 3.1. Tabela transactions
+
+Skopiuj i wklej całą zawartość pliku `supabase/migrations/001_initial_schema.sql`
+Kliknij "Run" (lub naciśnij Ctrl+Enter)
+
+### 3.2. Zezwól na ujemne kwoty (opcjonalnie)
+
+Skopiuj i wklej całą zawartość pliku `supabase/migrations/006_allow_negative_amounts.sql`
+Kliknij "Run"
+
+### 3.3. Tabela reward (dla globalnych ustawień nagrody)
+
+Skopiuj i wklej całą zawartość pliku `supabase/migrations/007_create_reward_table.sql`
+Kliknij "Run"
+
+### Weryfikacja tabel
 
 1. Przejdź do **Table Editor** w panelu Supabase
-2. Powinieneś zobaczyć tabelę `transactions`
-3. Sprawdź, czy kolumny są poprawne:
+2. Powinieneś zobaczyć tabele:
+   - `transactions` - transakcje graczy
+   - `reward` - globalne ustawienia nagrody (tylko jedna nagroda dla wszystkich)
+3. Sprawdź, czy kolumny są poprawne w tabeli `transactions`:
    - `id` (uuid)
    - `player` (varchar)
    - `amount` (numeric)

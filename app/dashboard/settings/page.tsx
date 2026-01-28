@@ -14,10 +14,6 @@ export default function SettingsPage() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [goalAmount, setGoalAmount] = useState('5000')
-  const [playerCode, setPlayerCode] = useState('')
-  const [playerCodeError, setPlayerCodeError] = useState<string | null>(null)
-  const [currentPlayer, setCurrentPlayer] = useState<'A' | 'B' | null>(null)
-  const [savedPlayerCode, setSavedPlayerCode] = useState('')
   
   // Only create client in browser
   const supabase = typeof window !== 'undefined' ? createClient() : null
@@ -33,12 +29,6 @@ export default function SettingsPage() {
     // Load goal amount
     const savedGoal = localStorage.getItem('goal_amount') || '5000'
     setGoalAmount(savedGoal)
-
-    // Load player code and current player
-    const savedCode = localStorage.getItem('player_code') || ''
-    const savedPlayer = localStorage.getItem('current_player') as 'A' | 'B' | null
-    setSavedPlayerCode(savedCode)
-    setCurrentPlayer(savedPlayer)
   }, [])
 
   const handleAdminLogin = (e: React.FormEvent) => {
@@ -86,42 +76,6 @@ export default function SettingsPage() {
     localStorage.setItem('goal_amount', newGoal.toString())
     alert(`Goal amount changed to ${newGoal.toLocaleString()} PLN`)
     window.location.reload()
-  }
-
-  const handleSetPlayerCode = (e: React.FormEvent) => {
-    e.preventDefault()
-    setPlayerCodeError(null)
-
-    if (!playerCode.trim()) {
-      setPlayerCodeError('Player code cannot be empty')
-      return
-    }
-
-    // Save player code
-    localStorage.setItem('player_code', playerCode.trim())
-    setSavedPlayerCode(playerCode.trim())
-    setPlayerCode('')
-    alert('Player code saved successfully!')
-  }
-
-  const handleSelectPlayer = (player: 'A' | 'B') => {
-    const code = localStorage.getItem('player_code')
-    if (!code) {
-      alert('Please set your player code first')
-      return
-    }
-
-    localStorage.setItem('current_player', player)
-    setCurrentPlayer(player)
-    alert(`You are now set as ${player === 'A' ? 'Screampy' : 'Grzechu'}`)
-  }
-
-  const handleClearPlayer = () => {
-    localStorage.removeItem('current_player')
-    localStorage.removeItem('player_code')
-    setCurrentPlayer(null)
-    setSavedPlayerCode('')
-    alert('Player settings cleared')
   }
 
   return (
@@ -241,104 +195,6 @@ export default function SettingsPage() {
               </div>
             </div>
           )}
-
-          {/* Player Settings */}
-          <div className="bg-dark-gray rounded-xl p-6 border border-medium-gray shadow-lg">
-            <h2 className="text-xl font-semibold mb-4">Player Settings</h2>
-            <div className="space-y-6">
-              {/* Set Player Code */}
-              <div>
-                <label className="block text-sm font-medium mb-2 text-gray-300">
-                  Your Player Code
-                </label>
-                <p className="text-xs text-gray-400 mb-3">
-                  Set your own personal code to identify yourself. This code is private and only you know it.
-                </p>
-                {savedPlayerCode ? (
-                  <div className="space-y-3">
-                    <div className="px-4 py-3 bg-medium-gray border border-light-gray rounded-lg text-foreground">
-                      <span className="text-sm text-gray-400">Current code: </span>
-                      <span className="font-mono font-semibold">{savedPlayerCode}</span>
-                    </div>
-                    <button
-                      onClick={handleClearPlayer}
-                      className="px-4 py-2 bg-medium-gray hover:bg-light-gray border border-light-gray rounded-lg text-sm transition-colors text-gray-300"
-                    >
-                      Clear Player Code
-                    </button>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSetPlayerCode} className="space-y-3">
-                    <input
-                      type="text"
-                      value={playerCode}
-                      onChange={(e) => setPlayerCode(e.target.value)}
-                      placeholder="Enter your personal code"
-                      className="w-full px-4 py-3 bg-medium-gray border border-light-gray rounded-lg text-foreground placeholder-gray-500 focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition-all"
-                    />
-                    {playerCodeError && (
-                      <div className="bg-red-900/20 border border-red-800 rounded-lg p-3 text-red-400 text-sm">
-                        {playerCodeError}
-                      </div>
-                    )}
-                    <button
-                      type="submit"
-                      className="px-4 py-2 bg-accent hover:bg-accent/90 text-black font-semibold rounded-lg transition-colors"
-                    >
-                      Save Player Code
-                    </button>
-                  </form>
-                )}
-              </div>
-
-              {/* Select Player */}
-              {savedPlayerCode && (
-                <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-300">
-                    Select Your Player
-                  </label>
-                  <p className="text-xs text-gray-400 mb-3">
-                    Choose which player you are: Screampy (A) or Grzechu (B)
-                  </p>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button
-                      onClick={() => handleSelectPlayer('A')}
-                      className={`p-4 rounded-lg border-2 transition-all ${
-                        currentPlayer === 'A'
-                          ? 'bg-accent/20 border-accent text-accent'
-                          : 'bg-medium-gray border-light-gray text-gray-300 hover:border-accent/50'
-                      }`}
-                    >
-                      <div className="font-semibold mb-1">Screampy</div>
-                      <div className="text-xs opacity-75">Player A</div>
-                      {currentPlayer === 'A' && (
-                        <div className="text-xs mt-2 font-bold">✓ Selected</div>
-                      )}
-                    </button>
-                    <button
-                      onClick={() => handleSelectPlayer('B')}
-                      className={`p-4 rounded-lg border-2 transition-all ${
-                        currentPlayer === 'B'
-                          ? 'bg-accent-orange/20 border-accent-orange text-accent-orange'
-                          : 'bg-medium-gray border-light-gray text-gray-300 hover:border-accent-orange/50'
-                      }`}
-                    >
-                      <div className="font-semibold mb-1">Grzechu</div>
-                      <div className="text-xs opacity-75">Player B</div>
-                      {currentPlayer === 'B' && (
-                        <div className="text-xs mt-2 font-bold">✓ Selected</div>
-                      )}
-                    </button>
-                  </div>
-                  {currentPlayer && (
-                    <div className="mt-3 px-4 py-2 bg-green-900/20 border border-green-800 rounded-lg text-green-400 text-sm">
-                      You are currently set as: <strong>{currentPlayer === 'A' ? 'Screampy' : 'Grzechu'}</strong>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
 
           {/* General Settings */}
           <div className="bg-dark-gray rounded-xl p-6 border border-medium-gray shadow-lg">
